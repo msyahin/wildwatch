@@ -1,0 +1,49 @@
+[
+    {
+      "name": "Tiger",
+      "status": "Endangered",
+      "scientificName": "Panthera Tigris",
+      "description": "The tiger is the largest living cat species and a member of the genus Panthera. It is most recognisable for its dark vertical stripes on orange fur with a lighter underside.",
+      "location": "Sundarbans, India",
+      "diet": "Carnivore",
+      "images": ["assets/placeholder.png"]
+    },
+    {
+      "name": "Beetle",
+      "status": "Endangered",
+      "scientificName": "Coleoptera",
+      "description": "Beetles are a group of insects that form the order Coleoptera, characterized by their hard exoskeletons and modified wings.",
+      "location": "Amazon Rainforest",
+      "diet": "Herbivore",
+      "images": ["assets/placeholder.png"]
+    },
+    {
+      "name": "Turtle",
+      "status": "Endangered",
+      "scientificName": "Testudines",
+      "description": "Turtles are reptiles of the order Testudines, with bodies encased in bony shells. They are known for their longevity.",
+      "location": "Galapagos Islands",
+      "diet": "Herbivore",
+      "images": ["assets/placeholder.png"]
+    },
+    {
+      "name": "Orangutan",
+      "status": "Endangered",
+      "scientificName": "Pongo",
+      "description": "Orangutans are great apes native to Indonesia and Malaysia. They are currently found in the rainforests of Borneo and Sumatra.",
+      "location": "Borneo, Malaysia",
+      "diet": "Herbivore",
+      "images": ["assets/placeholder.png"]
+    },
+    {
+      "name": "Hornbill",
+      "status": "Endangered",
+      "scientificName": "Bucerotidae",
+      "description": "Orangutans are great apes native to Indonesia and Malaysia. They are currently found in the rainforests of Borneo and Sumatra.",
+      "location": "Borneo, Malaysia",
+      "diet": "Herbivore",
+      "images": ["assets/placeholder.png"]
+    }
+  ]
+  
+  
