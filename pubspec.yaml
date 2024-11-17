@@ -10,10 +10,15 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.8
   image_picker: ^0.8.5+3
   tflite_flutter: ^0.11.0
   image: ^4.1.3
+  audioplayers: ^6.1.0
+  path_provider: ^2.0.12
+  smooth_page_indicator: ^1.2.0+3
+  icons_plus: ^5.0.0
+  camera: ^0.10.0+1
 
 dev_dependencies:
   flutter_test:
@@ -25,6 +30,35 @@ flutter:
   
   assets:
     - assets/
+    - assets/avatar.jpg
+    - assets/birds.png
+    - assets/carnivore.png
+    - assets/herbivore.png
+    - assets/seafish.png
+    - assets/lion.jpg
+    - assets/koala.jpg
+    - assets/cheetah.jpg
+    - assets/elephant.jpg
+    - assets/tiger.jpg
+    - assets/panda.jpg
+    - assets/homewild.png
+    - assets/google_logo.png
+    - assets/facebook_logo.png
+    - assets/cartoon1.jpeg
+    - assets/cartoon2.jpeg
+    - assets/cartoon3.jpeg
+    - assets/getstart1.jpg
+    - assets/wildlogo.png
+    - assets/audio/theme_song.mp3
+    - assets/audio/click_effect2.mp3
+    - assets/pandascan.png
+    - assets/mainpanda.png
+    - assets/panda_1.png
+    - assets/panda_2.png
+    - assets/panda_3.png
 
   fonts:
-    - family: SofiaSans
+    - family: Minecraft
+      fonts:
+        - asset: assets/fonts/Minecraft.ttf
+    

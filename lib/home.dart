@@ -1,237 +1,334 @@
 import 'package:flutter/material.dart';
-import 'scan.dart'; // Importing the ScanPage if needed
+import 'scan.dart'; // Import the ScanScreen file
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
-      backgroundColor: Colors.white, // Changed background to white
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
+          children: [
+            const HomeScreen(),
+            Positioned(
+              left: 16,
+              right: 16,
+              bottom: 16,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30.0),
+                child: Container(
+                  height: 65,
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 10,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: BottomNavigationBar(
+                    currentIndex: 0,
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    selectedItemColor: Colors.redAccent.withOpacity(0.9),
+                    unselectedItemColor: Colors.white.withOpacity(0.9),
+                    selectedFontSize: 14,
+                    unselectedFontSize: 12,
+                    iconSize: 24,
+                    type: BottomNavigationBarType.fixed,
+                    items: const [
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.home_filled),
+                        label: 'Home',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.camera_alt),
+                        label: 'Scan',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.manage_search_rounded),
+                        label: 'Discover',
+                      ),
+                    ],
+                    onTap: (index) {
+                      if (index == 1) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ScanPage()),
+                        );
+                      } else if (index == 0) {
+                        // Navigate back to HomeScreen (or handle Home tap if needed)
+                      } else if (index == 2) {
+                        // Add logic for Discover button if necessary
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        children: [
+          SizedBox(height: 32),
+          WelcomeBanner(),
+          SizedBox(height: 16),
+          DiscoverSection(),
+          SizedBox(height: 16),
+          Expanded(
+            child: RecentAnimalsSection(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class WelcomeBanner extends StatelessWidget {
+  const WelcomeBanner({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RichText(
+          text: const TextSpan(
+            text: 'Welcome, ',
+            style: TextStyle(
+              fontFamily: 'Minecraft',
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
             children: [
-              const Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Welcome, Syafiy.',
-                      style: TextStyle(
-                        color: Colors.black, // Changed text color to black
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  CircleAvatar(
-                    backgroundColor: Colors.black, // Changed background color for better visibility
-                    child: Icon(
-                      Icons.person,
-                      color: Colors.white, // Changed icon color for better contrast
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 4),
-              const Text(
-                'Discover the wilderness today!',
+              TextSpan(
+                text: 'Syafiy!',
                 style: TextStyle(
-                  color: Colors.black54, // Changed text color for better contrast
-                  fontSize: 16,
+                  fontFamily: 'Minecraft',
+                  color: Colors.red,
                 ),
-              ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.black12, // Changed background color for contrast
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Your History',
-                      style: TextStyle(
-                        color: Colors.black, // Changed text color to black
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    const Text(
-                      'Today, 13 August 2024',
-                      style: TextStyle(
-                        color: Colors.black54, // Changed text color for better contrast
-                        fontSize: 12,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '3 new species discovered!',
-                              style: TextStyle(color: Colors.black), // Changed text color to black
-                            ),
-                            Text(
-                              '3 new different regions',
-                              style: TextStyle(color: Colors.black), // Changed text color to black
-                            ),
-                          ],
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text('Saved'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Discover',
-                    style: TextStyle(
-                      color: Colors.black, // Changed text color to black
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'See all',
-                      style: TextStyle(color: Colors.blueAccent), // Changed color for visibility
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: screenWidth > 360 ? 4 : 3,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                  childAspectRatio: 1,
-                  children: [
-                    _buildCategoryTile('Birds', Icons.filter_hdr),
-                    _buildCategoryTile('Carnivore', Icons.category),
-                    _buildCategoryTile('Herbivore', Icons.grass),
-                    _buildCategoryTile('Sea Fish', Icons.water),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Recent Animals',
-                style: TextStyle(
-                  color: Colors.black, // Changed text color to black
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _buildAnimalCard('assets/placeholder.png'), // Replace with your image asset
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: _buildAnimalCard('assets/placeholder.png'), // Replace with your image asset
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildBottomNavItem(Icons.home, 'Home', () {
-                    // Logic to go to HomePage or do nothing if already on it
-                  }),
-                  _buildBottomNavItem(Icons.camera_alt, 'Scan', () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => UploadPage()),
-                    );
-                  }),
-                  _buildBottomNavItem(Icons.explore, 'Discover', () {
-                    // Logic to go to DiscoverPage if you have one
-                  }),
-                ],
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildCategoryTile(String title, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.black12, // Changed color for contrast against white background
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: Colors.black, size: 30), // Changed icon color to black
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: const TextStyle(color: Colors.black, fontSize: 12), // Changed text color to black
+        const Text(
+          'Discover the wilderness today!',
+          style: TextStyle(
+            fontFamily: 'Minecraft',
+            fontSize: 14,
           ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 16),
+        const YourHistoryCard(),
+      ],
     );
   }
+}
 
-  Widget _buildAnimalCard(String imagePath) {
+class YourHistoryCard extends StatelessWidget {
+  const YourHistoryCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        image: DecorationImage(
-          image: AssetImage(imagePath),
-          fit: BoxFit.cover,
+        color: Color(0xFFE3FF63),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Your History',
+                  style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  '3 new species discovered!',
+                  style: TextStyle(color: Colors.black),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  '3 new different regions',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ],
+            ),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.green,
+              ),
+              child: const Text('Check'),
+            ),
+          ],
         ),
       ),
     );
   }
+}
 
-  Widget _buildBottomNavItem(IconData icon, String label, Function onTap) {
-    return GestureDetector(
-      onTap: () => onTap(),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: Colors.black, size: 30), // Changed icon color to black
-          Text(
-            label,
-            style: const TextStyle(color: Colors.black, fontSize: 12), // Changed text color to black
+class DiscoverSection extends StatelessWidget {
+  const DiscoverSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Discover',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            Text('See all'),
+          ],
+        ),
+        SizedBox(height: 8),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              DiscoverCard(label: 'Birds', iconPath: 'assets/birds.png', backgroundColor: Color(0xFFFF2257)),
+              DiscoverCard(label: 'Carnivore', iconPath: 'assets/carnivore.png', backgroundColor: Color(0xFFFFCF23)),
+              DiscoverCard(label: 'Herbivore', iconPath: 'assets/herbivore.png', backgroundColor: Color(0xFFA3EE89)),
+              DiscoverCard(label: 'Sea Fish', iconPath: 'assets/seafish.png', backgroundColor: Color(0xFF1AACFF)),
+            ],
           ),
-        ],
+        ),
+      ],
+    );
+  }
+}
+
+class DiscoverCard extends StatelessWidget {
+  final String label;
+  final String iconPath;
+  final Color backgroundColor;
+
+  const DiscoverCard({
+    super.key,
+    required this.label,
+    required this.iconPath,
+    required this.backgroundColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          padding: const EdgeInsets.all(12),
+          child: Image.asset(iconPath, width: 50, height: 50),
+        ),
+        const SizedBox(height: 8),
+        Text(label),
+      ],
+    );
+  }
+}
+
+class RecentAnimalsSection extends StatelessWidget {
+  const RecentAnimalsSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Recent Animals',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        Expanded(
+          child: GridView.builder(
+            padding: EdgeInsets.zero,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: 1, // Ensures consistent aspect ratio for all grid items
+            ),
+            itemCount: animalImages.length,
+            itemBuilder: (context, index) {
+              return AnimalCard(imagePath: animalImages[index]);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+const List<String> animalImages = [
+  'assets/lion.jpg',
+  'assets/placeholder.png',
+  'assets/tiger.jpg',
+  'assets/panda.jpg',
+  'assets/elephant.jpg',
+  'assets/cheetah.jpg',
+];
+
+class AnimalCard extends StatelessWidget {
+  final String imagePath;
+
+  const AnimalCard({super.key, required this.imagePath});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Image.asset(
+          imagePath,
+          fit: BoxFit.cover, // Ensures the image covers the container without distortion
+          width: double.infinity,
+          height: double.infinity,
+        ),
       ),
     );
   }

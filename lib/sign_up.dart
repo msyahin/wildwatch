@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignUpScreen extends StatefulWidget {
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   bool _isPasswordHidden = true;
 
   @override
@@ -22,7 +24,7 @@ class _SignInScreenState extends State<SignInScreen> {
             children: [
               // Title
               const Text(
-                'We Say Hello!',
+                'Hey there!',
                 style: TextStyle(
                   fontFamily: 'Minecraft', // Use the pixelated Minecraft font
                   fontSize: 28,
@@ -32,7 +34,7 @@ class _SignInScreenState extends State<SignInScreen> {
               const SizedBox(height: 8),
               // Subtitle
               const Text(
-                'Welcome back. Use your email\nand password to log in.',
+                'Fill in your details to register\nyour account.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -40,6 +42,21 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               ),
               const SizedBox(height: 40),
+
+              // Name TextField
+              TextField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.person_outline),
+                  hintText: 'Name',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                ),
+              ),
+              const SizedBox(height: 20),
 
               // Email TextField
               TextField(
@@ -62,7 +79,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 obscureText: _isPasswordHidden,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.lock_outline),
-                  hintText: 'Password',
+                  hintText: 'Create Password',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
@@ -82,33 +99,43 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 20),
 
-              // Forgot Password
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {
-                    // Handle forgot password
-                  },
-                  child: const Text(
-                    'Forgot password?',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
+              // Confirm Password TextField
+              TextField(
+                controller: _confirmPasswordController,
+                obscureText: _isPasswordHidden,
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  hintText: 'Re-type Password',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isPasswordHidden
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                     ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordHidden = !_isPasswordHidden;
+                      });
+                    },
                   ),
                 ),
               ),
               const SizedBox(height: 20),
 
-              // Log In Button
+              // Sign Up Button
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Handle login
+                    // Navigate to homepage after successful sign-up
                     Navigator.pushNamed(context, '/home');
                   },
                   style: ElevatedButton.styleFrom(
@@ -118,7 +145,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                   child: const Text(
-                    'Log in',
+                    'Sign Up',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -129,9 +156,9 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Or Login With
+              // Or Sign Up With
               const Text(
-                'Or Login With',
+                'Or Sign Up With',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -164,7 +191,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       icon: Image.asset('assets/google_logo.png'),
                       iconSize: 30,
                       onPressed: () {
-                        // Handle Google login
+                        // Handle Google Sign Up
                       },
                     ),
                   ),
@@ -189,7 +216,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       icon: Image.asset('assets/facebook_logo.png'),
                       iconSize: 30,
                       onPressed: () {
-                        // Handle Facebook login
+                        // Handle Facebook Sign Up
                       },
                     ),
                   ),
@@ -197,12 +224,12 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Sign Up Link
+              // Already have an account? Sign In
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    "Don't have an account? ",
+                    'Already have an account? ',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.black,
@@ -210,11 +237,11 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   TextButton(
                     onPressed: () {
-                      // Navigate to Sign Up page
-                      Navigator.pushNamed(context, '/signup');
+                      // Navigate to Sign In
+                      Navigator.pushNamed(context, '/signin');
                     },
                     child: const Text(
-                      'Sign Up',
+                      'Sign In',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.red,

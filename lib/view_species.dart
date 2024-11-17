@@ -18,17 +18,32 @@ class ViewSpeciesPage extends StatelessWidget {
     String status = speciesData['status'];
     List<String> images = List<String>.from(speciesData['images']);
 
+    // Ensure at least 3 images in the gallery
+    while (images.length < 3) {
+      images.add('assets/placeholder.png');
+    }
+
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text(name),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Container(
+          margin: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
       ),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header image
             Image.asset(
@@ -37,8 +52,12 @@ class ViewSpeciesPage extends StatelessWidget {
               height: 300,
               width: double.infinity,
             ),
-            Padding(
+            Container(
               padding: const EdgeInsets.all(16.0),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -58,6 +77,7 @@ class ViewSpeciesPage extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+                            const SizedBox(height: 4), // Add spacing below name
                             Text(
                               scientificName,
                               style: const TextStyle(
@@ -136,7 +156,7 @@ class ViewSpeciesPage extends StatelessWidget {
                     description,
                     style: const TextStyle(fontSize: 16),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 24), // Increased spacing before gallery
                   // Gallery
                   const Text(
                     'Gallery',
@@ -146,40 +166,47 @@ class ViewSpeciesPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: images.map((imgPath) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.asset(
-                              imgPath,
-                              width: 120,
-                              height: 120,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: images.take(3).map((imgPath) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          imgPath,
+                          width: 110,
+                          height: 110,
+                          fit: BoxFit.cover,
+                        ),
+                      );
+                    }).toList(),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 24),
                   // Save Button
-                  Center(
+                  SizedBox(
+                    width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // Handle Save action
+                      },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.lightGreen,
-                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                        backgroundColor: const Color(0xFFCDEB45),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                       child: const Text(
                         'Save',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        style: TextStyle(
+                          fontFamily: 'Minecraft',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ),
+                  const SizedBox(height: 16), // Additional spacing for bottom padding
                 ],
               ),
             ),

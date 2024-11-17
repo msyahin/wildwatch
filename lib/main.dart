@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'get_started.dart'; // Import the GetStartedPage
+import 'get_started.dart';
+import 'login.dart';
+import 'home.dart';
+import 'sign_up.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,8 +14,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const GetStartedPage(), // Set GetStartedPage as the home page
+      title: 'WildWatch',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.white,
+        fontFamily: 'Minecraft', // Apply the Minecraft font globally
+      ),
+      initialRoute: '/get-started', // Set the initial route to GetStartedScreen
+      routes: {
+        '/get-started': (context) => const GetStartedScreen(),
+        '/signin': (context) => SignInScreen(),
+        '/signup': (context) => SignUpScreen(),
+        '/home': (context) => const HomePage(),
+      },
     );
   }
 }
