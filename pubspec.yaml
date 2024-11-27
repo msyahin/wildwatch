@@ -22,6 +22,7 @@ dependencies:
   firebase_core: ^3.8.0
   firebase_auth: ^5.3.3
   cloud_firestore: ^5.5.0
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +60,36 @@ flutter:
     - assets/panda_1.png
     - assets/panda_2.png
     - assets/panda_3.png
+    - assets/hornbill.jpg
+    - assets/flaminggo2.png
+    - assets/desert.png
+    - assets/southafrica.png
+    - assets/flaminggo.png
+    - assets/amazon.png
+    - assets/arctic.png
+    - assets/savannah.png
+    - assets/mangrove.png
+    - assets/wetlands.png
+    - assets/redcrestedturaco.png
+    - assets/shoebill.png
+    - assets/whitestork.png
+    - assets/casuarius.png
+    - assets/sunbittern.png
+    - assets/kingpenguin.png
+    - assets/hamerkop.png
+    - assets/indianpeafowl.png
+    - assets/americanflamingo.png
+    - assets/annashummingbird.png
+    - assets/rainbowlorikeet.png
+    - assets/kingfisher.png
+    - assets/flams1.png
+    - assets/lions1.png
+    - assets/crocs1.png
+    - assets/shark2.png
+    - assets/frogs.png
+    - assets/bees.png
+    - assets/spiders.png
+    - assets/crabs.png
 
   fonts:
     - family: Minecraft

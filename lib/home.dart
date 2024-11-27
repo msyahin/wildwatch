@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'scan.dart'; // Import the ScanScreen file
 import 'package:firebase_auth/firebase_auth.dart';
 import 'saved_animals.dart';
+import 'discover.dart';
+import 'birds.dart';
+import 'see_all.dart'; // Import the See All page
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -59,12 +62,27 @@ class HomePage extends StatelessWidget {
                       if (index == 1) {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const ScanPage()),
+                          PageRouteBuilder(
+                            pageBuilder: (_, __, ___) => const ScanPage(),
+                            transitionsBuilder: (_, anim, __, child) =>
+                                FadeTransition(
+                              opacity: anim,
+                              child: child,
+                            ),
+                          ),
                         );
-                      } else if (index == 0) {
-                        // Navigate back to HomeScreen (or handle Home tap if needed)
                       } else if (index == 2) {
-                        // Add logic for Discover button if necessary
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (_, __, ___) => const DiscoverScreen(),
+                            transitionsBuilder: (_, anim, __, child) =>
+                                FadeTransition(
+                              opacity: anim,
+                              child: child,
+                            ),
+                          ),
+                        );
                       }
                     },
                   ),
@@ -148,7 +166,6 @@ class WelcomeBanner extends StatelessWidget {
   }
 }
 
-
 class YourHistoryCard extends StatelessWidget {
   const YourHistoryCard({super.key});
 
@@ -156,7 +173,7 @@ class YourHistoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFFE3FF63),
+        color: const Color(0xFFE3FF63),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Padding(
@@ -170,10 +187,11 @@ class YourHistoryCard extends StatelessWidget {
                 Text(
                   'Your History',
                   style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
+                    decoration: TextDecoration.underline,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
                 SizedBox(height: 8),
                 Text(
@@ -191,7 +209,8 @@ class YourHistoryCard extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const SavedAnimalsPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const SavedAnimalsPage()),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -212,29 +231,71 @@ class DiscoverSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            const Text(
               'Discover',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            Text('See all'),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          const SeeAllScreen()), // Navigate to See All page
+                );
+              },
+              child: const Text(
+                'See all',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                ),
+              ),
+            ),
           ],
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 0),
+          padding: const EdgeInsets.symmetric(horizontal: 0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              DiscoverCard(label: 'Birds', iconPath: 'assets/birds.png', backgroundColor: Color(0xFFFF2257)),
-              DiscoverCard(label: 'Carnivore', iconPath: 'assets/carnivore.png', backgroundColor: Color(0xFFFFCF23)),
-              DiscoverCard(label: 'Herbivore', iconPath: 'assets/herbivore.png', backgroundColor: Color(0xFFA3EE89)),
-              DiscoverCard(label: 'Sea Fish', iconPath: 'assets/seafish.png', backgroundColor: Color(0xFF1AACFF)),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const BirdsScreen()),
+                  );
+                },
+                child: const DiscoverCard(
+                  label: 'Birds',
+                  iconPath: 'assets/birds.png',
+                  backgroundColor: Color(0xFFFF2257),
+                ),
+              ),
+              const DiscoverCard(
+                label: 'Carnivore',
+                iconPath: 'assets/carnivore.png',
+                backgroundColor: Color(0xFFFFCF23),
+              ),
+              const DiscoverCard(
+                label: 'Herbivore',
+                iconPath: 'assets/herbivore.png',
+                backgroundColor: Color(0xFFA3EE89),
+              ),
+              const DiscoverCard(
+                label: 'Sea Fish',
+                iconPath: 'assets/seafish.png',
+                backgroundColor: Color(0xFF1AACFF),
+              ),
             ],
           ),
         ),
@@ -294,7 +355,7 @@ class RecentAnimalsSection extends StatelessWidget {
               crossAxisCount: 2,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
-              childAspectRatio: 1, // Ensures consistent aspect ratio for all grid items
+              childAspectRatio: 1,
             ),
             itemCount: animalImages.length,
             itemBuilder: (context, index) {
@@ -309,7 +370,7 @@ class RecentAnimalsSection extends StatelessWidget {
 
 const List<String> animalImages = [
   'assets/lion.jpg',
-  'assets/placeholder.png',
+  'assets/hornbill.jpg',
   'assets/tiger.jpg',
   'assets/panda.jpg',
   'assets/elephant.jpg',
@@ -332,13 +393,13 @@ class AnimalCard extends StatelessWidget {
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
               blurRadius: 4,
-              offset: Offset(0, 2),
+              offset: const Offset(0, 2),
             ),
           ],
         ),
         child: Image.asset(
           imagePath,
-          fit: BoxFit.cover, // Ensures the image covers the container without distortion
+          fit: BoxFit.cover,
           width: double.infinity,
           height: double.infinity,
         ),
