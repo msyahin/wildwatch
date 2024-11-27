@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -9,39 +10,47 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordHidden = true;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<void> _signIn() async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      Navigator.pushNamed(context, '/home'); // Navigate to home on successful login
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to sign in: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Background color
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 100.0), // Moved content lower
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 100.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Title
               const Text(
                 'We Say Hello!',
                 style: TextStyle(
-                  fontFamily: 'Minecraft', // Use the pixelated Minecraft font
+                  fontFamily: 'Minecraft',
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
-              // Subtitle
               const Text(
                 'Welcome back. Use your email\nand password to log in.',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
               const SizedBox(height: 40),
-
-              // Email TextField
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
@@ -55,8 +64,6 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Password TextField
               TextField(
                 controller: _passwordController,
                 obscureText: _isPasswordHidden,
@@ -70,9 +77,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   fillColor: Colors.grey[100],
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _isPasswordHidden
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                      _isPasswordHidden ? Icons.visibility_off : Icons.visibility,
                     ),
                     onPressed: () {
                       setState(() {
@@ -83,36 +88,24 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-
-              // Forgot Password
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {
-                    // Handle forgot password
-                  },
+                  onPressed: () {},
                   child: const Text(
                     'Forgot password?',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: Colors.grey, fontSize: 14),
                   ),
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Log In Button
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Handle login
-                    Navigator.pushNamed(context, '/home');
-                  },
+                  onPressed: _signIn,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFCEE94B), // Lime green color
+                    backgroundColor: const Color(0xFFCEE94B),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -128,23 +121,16 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Or Login With
               const Text(
                 'Or Login With',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey,
-                ),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey),
               ),
               const SizedBox(height: 20),
-
-              // Social Media Buttons with Shadow
+              // Add social media login buttons as needed
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Google Button
+                  // Google Button (Placeholder)
                   Container(
                     width: 50,
                     height: 50,
@@ -161,56 +147,25 @@ class _SignInScreenState extends State<SignInScreen> {
                       ],
                     ),
                     child: IconButton(
-                      icon: Image.asset('assets/google_logo.png'),
+                      icon: Icon(Icons.g_translate),
                       iconSize: 30,
                       onPressed: () {
                         // Handle Google login
                       },
                     ),
                   ),
-                  const SizedBox(width: 20),
-                  // Facebook Button
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: IconButton(
-                      icon: Image.asset('assets/facebook_logo.png'),
-                      iconSize: 30,
-                      onPressed: () {
-                        // Handle Facebook login
-                      },
-                    ),
-                  ),
                 ],
               ),
               const SizedBox(height: 20),
-
-              // Sign Up Link
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
                     "Don't have an account? ",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.black),
                   ),
                   TextButton(
                     onPressed: () {
-                      // Navigate to Sign Up page
                       Navigator.pushNamed(context, '/signup');
                     },
                     child: const Text(

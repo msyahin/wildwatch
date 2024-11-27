@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -11,44 +12,64 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   bool _isPasswordHidden = true;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<void> _signUp() async {
+  if (_passwordController.text != _confirmPasswordController.text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Passwords do not match')),
+    );
+    return;
+  }
+
+  try {
+    UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+
+    // Save user display name (assuming user data management strategy like Firestore)
+    await userCredential.user?.updateDisplayName(_nameController.text);
+
+    Navigator.pushNamed(context, '/signin'); // Navigate to home on successful sign up
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to sign up: $e')),
+    );
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Background color
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 100.0), // Moved content lower
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 100.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Title
               const Text(
                 'Hey there!',
                 style: TextStyle(
-                  fontFamily: 'Minecraft', // Use the pixelated Minecraft font
+                  fontFamily: 'Minecraft',
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
-              // Subtitle
               const Text(
                 'Fill in your details to register\nyour account.',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
               const SizedBox(height: 40),
-
-              // Name TextField
               TextField(
                 controller: _nameController,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.person_outline),
-                  hintText: 'Name',
+                  hintText: 'Nickname',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
@@ -57,8 +78,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Email TextField
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
@@ -72,8 +91,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Password TextField
               TextField(
                 controller: _passwordController,
                 obscureText: _isPasswordHidden,
@@ -87,9 +104,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   fillColor: Colors.grey[100],
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _isPasswordHidden
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                      _isPasswordHidden ? Icons.visibility_off : Icons.visibility,
                     ),
                     onPressed: () {
                       setState(() {
@@ -100,8 +115,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Confirm Password TextField
               TextField(
                 controller: _confirmPasswordController,
                 obscureText: _isPasswordHidden,
@@ -115,9 +128,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   fillColor: Colors.grey[100],
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _isPasswordHidden
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                      _isPasswordHidden ? Icons.visibility_off : Icons.visibility,
                     ),
                     onPressed: () {
                       setState(() {
@@ -128,18 +139,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Sign Up Button
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Navigate to homepage after successful sign-up
-                    Navigator.pushNamed(context, '/home');
-                  },
+                  onPressed: _signUp,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFCEE94B), // Lime green color
+                    backgroundColor: const Color(0xFFCEE94B),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -155,23 +161,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Or Sign Up With
               const Text(
                 'Or Sign Up With',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey,
-                ),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey),
               ),
               const SizedBox(height: 20),
-
-              // Social Media Buttons with Shadow
+              // Add social media sign-up buttons as needed
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Google Button
+                  // Google Button (Placeholder)
                   Container(
                     width: 50,
                     height: 50,
@@ -188,56 +187,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ],
                     ),
                     child: IconButton(
-                      icon: Image.asset('assets/google_logo.png'),
+                      icon: Icon(Icons.g_translate),
                       iconSize: 30,
                       onPressed: () {
                         // Handle Google Sign Up
                       },
                     ),
                   ),
-                  const SizedBox(width: 20),
-                  // Facebook Button
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: IconButton(
-                      icon: Image.asset('assets/facebook_logo.png'),
-                      iconSize: 30,
-                      onPressed: () {
-                        // Handle Facebook Sign Up
-                      },
-                    ),
-                  ),
                 ],
               ),
               const SizedBox(height: 20),
-
-              // Already have an account? Sign In
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
                     'Already have an account? ',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.black),
                   ),
                   TextButton(
                     onPressed: () {
-                      // Navigate to Sign In
                       Navigator.pushNamed(context, '/signin');
                     },
                     child: const Text(

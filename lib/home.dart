@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'scan.dart'; // Import the ScanScreen file
+import 'package:firebase_auth/firebase_auth.dart';
+import 'saved_animals.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -81,16 +83,19 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
+    final user = FirebaseAuth.instance.currentUser;
+    String? displayName = user?.displayName ?? 'User';
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         children: [
-          SizedBox(height: 32),
-          WelcomeBanner(),
-          SizedBox(height: 16),
-          DiscoverSection(),
-          SizedBox(height: 16),
-          Expanded(
+          const SizedBox(height: 32),
+          WelcomeBanner(name: displayName),
+          const SizedBox(height: 16),
+          const DiscoverSection(),
+          const SizedBox(height: 16),
+          const Expanded(
             child: RecentAnimalsSection(),
           ),
         ],
@@ -100,7 +105,9 @@ class HomeScreen extends StatelessWidget {
 }
 
 class WelcomeBanner extends StatelessWidget {
-  const WelcomeBanner({super.key});
+  final String name;
+
+  const WelcomeBanner({super.key, required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -108,9 +115,9 @@ class WelcomeBanner extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RichText(
-          text: const TextSpan(
+          text: TextSpan(
             text: 'Welcome, ',
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'Minecraft',
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -118,8 +125,8 @@ class WelcomeBanner extends StatelessWidget {
             ),
             children: [
               TextSpan(
-                text: 'Syafiy!',
-                style: TextStyle(
+                text: '$name!',
+                style: const TextStyle(
                   fontFamily: 'Minecraft',
                   color: Colors.red,
                 ),
@@ -140,6 +147,7 @@ class WelcomeBanner extends StatelessWidget {
     );
   }
 }
+
 
 class YourHistoryCard extends StatelessWidget {
   const YourHistoryCard({super.key});
@@ -180,7 +188,12 @@ class YourHistoryCard extends StatelessWidget {
               ],
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SavedAnimalsPage()),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.green,

@@ -1,10 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'get_started.dart';
 import 'login.dart';
 import 'home.dart';
 import 'sign_up.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -18,9 +21,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
-        fontFamily: 'Minecraft', // Apply the Minecraft font globally
+        fontFamily: 'Minecraft',
       ),
-      initialRoute: '/get-started', // Set the initial route to GetStartedScreen
+      initialRoute: '/get-started',
       routes: {
         '/get-started': (context) => const GetStartedScreen(),
         '/signin': (context) => SignInScreen(),

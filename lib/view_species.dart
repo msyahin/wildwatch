@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class ViewSpeciesPage extends StatelessWidget {
+class ViewSpeciesPage extends StatefulWidget {
   final Map<String, dynamic> speciesData;
 
   const ViewSpeciesPage({
@@ -9,14 +11,94 @@ class ViewSpeciesPage extends StatelessWidget {
   });
 
   @override
+  _ViewSpeciesPageState createState() => _ViewSpeciesPageState();
+}
+
+class _ViewSpeciesPageState extends State<ViewSpeciesPage> {
+  bool isSaved = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfSaved();
+  }
+
+  Future<void> _checkIfSaved() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    try {
+      // Check if the species is already saved
+      CollectionReference savedSpecies = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('saved_species');
+
+      QuerySnapshot query = await savedSpecies
+          .where('name', isEqualTo: widget.speciesData['name'])
+          .get();
+
+      if (query.docs.isNotEmpty) {
+        setState(() {
+          isSaved = true;
+        });
+      }
+    } catch (e) {
+      print('Error checking if species is saved: $e');
+    }
+  }
+
+  Future<void> _toggleSave() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      print('User is not logged in.');
+      return;
+    }
+
+    try {
+      CollectionReference savedSpecies = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('saved_species');
+
+      if (isSaved) {
+        // Remove the species from saved list
+        QuerySnapshot query = await savedSpecies
+            .where('name', isEqualTo: widget.speciesData['name'])
+            .get();
+
+        for (var doc in query.docs) {
+          await doc.reference.delete();
+        }
+
+        setState(() {
+          isSaved = false;
+        });
+      } else {
+        // Save the species to Firestore with seenDate
+        await savedSpecies.add({
+          ...widget.speciesData,
+          'seenDate': DateTime.now().toLocal().toIso8601String(), // Adding seenDate
+        });
+
+        setState(() {
+          isSaved = true;
+        });
+      }
+    } catch (e) {
+      print('Error toggling save status: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    String name = speciesData['name'];
-    String scientificName = speciesData['scientificName'] ?? 'Scientific name unavailable';
-    String description = speciesData['description'];
-    String location = speciesData['location'];
-    String diet = speciesData['diet'];
-    String status = speciesData['status'];
-    List<String> images = List<String>.from(speciesData['images']);
+    String name = widget.speciesData['name'];
+    String scientificName = widget.speciesData['scientificName'];
+    String description = widget.speciesData['description'];
+    String location = widget.speciesData['location'];
+    String diet = widget.speciesData['diet'];
+    String status = widget.speciesData['status'];
+    List<String> images = List<String>.from(widget.speciesData['images']);
 
     // Ensure at least 3 images in the gallery
     while (images.length < 3) {
@@ -77,7 +159,7 @@ class ViewSpeciesPage extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 4), // Add spacing below name
+                            const SizedBox(height: 4),
                             Text(
                               scientificName,
                               style: const TextStyle(
@@ -156,7 +238,7 @@ class ViewSpeciesPage extends StatelessWidget {
                     description,
                     style: const TextStyle(fontSize: 16),
                   ),
-                  const SizedBox(height: 24), // Increased spacing before gallery
+                  const SizedBox(height: 24),
                   // Gallery
                   const Text(
                     'Gallery',
@@ -181,23 +263,21 @@ class ViewSpeciesPage extends StatelessWidget {
                     }).toList(),
                   ),
                   const SizedBox(height: 24),
-                  // Save Button
+                  // Toggle Save Button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        // Handle Save action
-                      },
+                      onPressed: _toggleSave,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFCDEB45),
+                        backgroundColor: isSaved ? const Color.fromARGB(255, 255, 214, 201) : const Color(0xFFCDEB45),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text(
-                        'Save',
-                        style: TextStyle(
+                      child: Text(
+                        isSaved ? 'Saved' : 'Save',
+                        style: const TextStyle(
                           fontFamily: 'Minecraft',
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -206,7 +286,7 @@ class ViewSpeciesPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16), // Additional spacing for bottom padding
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
