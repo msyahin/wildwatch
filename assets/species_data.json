@@ -6,7 +6,8 @@
       "description": "The tiger is the largest living cat species and a member of the genus Panthera. It is most recognisable for its dark vertical stripes on orange fur with a lighter underside.",
       "location": "Sundarbans, India",
       "diet": "Carnivore",
-      "images": ["assets/placeholder.png"]
+      "headerImage": "assets/tiger.jpg",
+      "images": ["assets/tiger1.jpg", "assets/tiger2.jpg", "assets/tiger3.jpg"]
     },
     {
       "name": "Beetle",
@@ -15,7 +16,8 @@
       "description": "Beetles are a group of insects that form the order Coleoptera, characterized by their hard exoskeletons and modified wings.",
       "location": "Amazon Rainforest",
       "diet": "Herbivore",
-      "images": ["assets/placeholder.png"]
+      "headerImage": "assets/beetle1.jpg",
+      "images": ["assets/tiger2.jpg", "assets/tiger3.jpg", "assets/tiger4.jpg"]
     },
     {
       "name": "Turtle",
@@ -24,7 +26,8 @@
       "description": "Turtles are reptiles of the order Testudines, with bodies encased in bony shells. They are known for their longevity.",
       "location": "Galapagos Islands",
       "diet": "Herbivore",
-      "images": ["assets/placeholder.png"]
+      "headerImage": "assets/turtle4.jpg",
+      "images": ["assets/turtle1.jpg", "assets/turtle2.jpg", "assets/turtle3.jpg"]
     },
     {
       "name": "Orangutan",
@@ -33,7 +36,8 @@
       "description": "Orangutans are great apes native to Indonesia and Malaysia. They are currently found in the rainforests of Borneo and Sumatra.",
       "location": "Borneo, Malaysia",
       "diet": "Herbivore",
-      "images": ["assets/placeholder.png"]
+      "headerImage": "assets/orangutan4.jpg",
+      "images": ["assets/orangutan1.jpg", "assets/orangutan2.jpg", "assets/orangutan3.jpg"]
     },
     {
       "name": "Hornbill",
@@ -42,7 +46,8 @@
       "description": "Orangutans are great apes native to Indonesia and Malaysia. They are currently found in the rainforests of Borneo and Sumatra.",
       "location": "Borneo, Malaysia",
       "diet": "Herbivore",
-      "images": ["assets/placeholder.png"]
+      "headerImage": "assets/hornbill4.jpg",
+      "images": ["assets/hornbill1.jpg", "assets/hornbill2.jpg", "assets/hornbill3.jpg"]
     }
   ]
   

@@ -20,11 +20,11 @@ class ResultPage extends StatelessWidget {
     final String response = await DefaultAssetBundle.of(context).loadString('assets/species_data.json');
     List<dynamic> data = jsonDecode(response);
 
-    // Extract species name (e.g., "Tiger") from result
-    final speciesName = result.split(' ')[1]; // This will get the second word (assumes consistent format)
+    // Use the result directly as the species name and trim it to avoid mismatches
+    final speciesName = result.trim();
 
     return data.firstWhere(
-      (species) => species["name"] == speciesName,
+      (species) => species["name"].toLowerCase() == speciesName.toLowerCase(), // Case-insensitive match
       orElse: () => null,
     );
   }
@@ -50,7 +50,6 @@ class ResultPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Classification Result Title
               const Text(
                 "Classification Result",
                 style: TextStyle(
@@ -61,8 +60,6 @@ class ResultPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-
-              // Display the image
               ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Image.file(
@@ -73,8 +70,6 @@ class ResultPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-
-              // "You've caught a species!" Text
               const Text(
                 "You've caught a species!",
                 style: TextStyle(
@@ -85,8 +80,6 @@ class ResultPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
-
-              // Display species result and status
               Text(
                 result,
                 textAlign: TextAlign.center,
@@ -98,8 +91,6 @@ class ResultPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
-
-              // Probability and Observation Details
               Text(
                 "Probability: ${(probability * 100).toStringAsFixed(2)}%\nYou observed it on:\n$formattedDate",
                 textAlign: TextAlign.center,
@@ -111,8 +102,6 @@ class ResultPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-
-              // Buttons Section
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(

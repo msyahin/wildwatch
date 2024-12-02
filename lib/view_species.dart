@@ -28,7 +28,6 @@ class _ViewSpeciesPageState extends State<ViewSpeciesPage> {
     if (user == null) return;
 
     try {
-      // Check if the species is already saved
       CollectionReference savedSpecies = FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
@@ -62,7 +61,7 @@ class _ViewSpeciesPageState extends State<ViewSpeciesPage> {
           .collection('saved_species');
 
       if (isSaved) {
-        // Remove the species from saved list
+        // Remove the species from the saved list
         QuerySnapshot query = await savedSpecies
             .where('name', isEqualTo: widget.speciesData['name'])
             .get();
@@ -78,7 +77,7 @@ class _ViewSpeciesPageState extends State<ViewSpeciesPage> {
         // Save the species to Firestore with seenDate
         await savedSpecies.add({
           ...widget.speciesData,
-          'seenDate': DateTime.now().toLocal().toIso8601String(), // Adding seenDate
+          'seenDate': DateTime.now().toLocal().toIso8601String(),
         });
 
         setState(() {
@@ -98,12 +97,8 @@ class _ViewSpeciesPageState extends State<ViewSpeciesPage> {
     String location = widget.speciesData['location'];
     String diet = widget.speciesData['diet'];
     String status = widget.speciesData['status'];
+    String headerImage = widget.speciesData['headerImage'];
     List<String> images = List<String>.from(widget.speciesData['images']);
-
-    // Ensure at least 3 images in the gallery
-    while (images.length < 3) {
-      images.add('assets/placeholder.png');
-    }
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -129,7 +124,7 @@ class _ViewSpeciesPageState extends State<ViewSpeciesPage> {
           children: [
             // Header image
             Image.asset(
-              images[0],
+              headerImage,
               fit: BoxFit.cover,
               height: 300,
               width: double.infinity,
@@ -143,11 +138,10 @@ class _ViewSpeciesPageState extends State<ViewSpeciesPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Row with Name, Scientific Name, Status, Diet, and Location
+                  // Name and details
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Name and Scientific Name
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,14 +165,13 @@ class _ViewSpeciesPageState extends State<ViewSpeciesPage> {
                           ],
                         ),
                       ),
-                      // Status, Diet, and Location on the right
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                             decoration: BoxDecoration(
-                              color: status == 'Endangered' ? const Color.fromARGB(255, 255, 0, 0) : Colors.green,
+                              color: status == 'Endangered' ? Colors.red : Colors.green,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
@@ -225,7 +218,6 @@ class _ViewSpeciesPageState extends State<ViewSpeciesPage> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  // Description
                   const Text(
                     'Description',
                     style: TextStyle(
@@ -239,7 +231,6 @@ class _ViewSpeciesPageState extends State<ViewSpeciesPage> {
                     style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 24),
-                  // Gallery
                   const Text(
                     'Gallery',
                     style: TextStyle(
@@ -248,9 +239,10 @@ class _ViewSpeciesPageState extends State<ViewSpeciesPage> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: images.take(3).map((imgPath) {
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: images.map((imgPath) {
                       return ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: Image.asset(
@@ -263,13 +255,12 @@ class _ViewSpeciesPageState extends State<ViewSpeciesPage> {
                     }).toList(),
                   ),
                   const SizedBox(height: 24),
-                  // Toggle Save Button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: _toggleSave,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isSaved ? const Color.fromARGB(255, 255, 214, 201) : const Color(0xFFCDEB45),
+                        backgroundColor: isSaved ? Colors.redAccent : Colors.greenAccent,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -278,7 +269,6 @@ class _ViewSpeciesPageState extends State<ViewSpeciesPage> {
                       child: Text(
                         isSaved ? 'Saved' : 'Save',
                         style: const TextStyle(
-                          fontFamily: 'Minecraft',
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
@@ -286,7 +276,6 @@ class _ViewSpeciesPageState extends State<ViewSpeciesPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
                 ],
               ),
             ),

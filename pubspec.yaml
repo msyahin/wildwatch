@@ -90,6 +90,26 @@ flutter:
     - assets/bees.png
     - assets/spiders.png
     - assets/crabs.png
+    - assets/tiger1.jpg
+    - assets/tiger2.jpg
+    - assets/tiger3.jpg
+    - assets/beetle1.jpg
+    - assets/beetle2.jpg
+    - assets/beetle3.jpg
+    - assets/beetle4.jpg
+    - assets/hornbill1.jpg
+    - assets/hornbill2.jpg
+    - assets/hornbill3.jpg
+    - assets/hornbill4.jpg
+    - assets/orangutan1.jpg
+    - assets/orangutan2.jpg
+    - assets/orangutan3.jpg
+    - assets/orangutan4.jpg
+    - assets/turtle1.jpg
+    - assets/turtle2.jpg
+    - assets/turtle3.jpg
+    - assets/turtle4.jpg
+
 
   fonts:
     - family: Minecraft

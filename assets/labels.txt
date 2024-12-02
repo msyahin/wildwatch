@@ -1,6 +1,6 @@
-0 Tiger (Endangered)
-1 Beetle (Endangered)
-2 Turtle (Endangered)
-3 Orangutan (Endangered)
-4 Not Endangered Animals
-5 Hornbill (Endangered)
+Tiger 
+Beetle 
+Turtle 
+Orangutan 
+Not Endangered Animals
+Hornbill 
