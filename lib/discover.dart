@@ -1,12 +1,33 @@
 import 'package:flutter/material.dart';
 import 'home.dart'; // Import HomePage
 import 'scan.dart'; // Import ScanScreen
+import 'jungle.dart'; // Import JunglePage
+import 'wetland.dart'; // Import WetlandsPage
+import 'ocean.dart'; // Import OceanPage
 
 class DiscoverScreen extends StatelessWidget {
   const DiscoverScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> discoverData = [
+      {
+        "image": 'assets/jungle2.jpg',
+        "label": 'Jungle',
+        "route": const JungleScreen(), // Add route for JunglePage
+      },
+      {
+        "image": 'assets/wetland.jpg',
+        "label": 'Wetlands',
+        "route": const WetlandScreen(), // Add route for WetlandsPage
+      },
+      {
+        "image": 'assets/ocean.jpg',
+        "label": 'Ocean',
+        "route": const OceanScreen(), // Add route for OceanPage
+      },
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -33,67 +54,51 @@ class DiscoverScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(
               bottom: 80, // Extra padding to stay above the navigation bar
             ),
-            itemCount: 6, // Updated to 6 items
+            itemCount: discoverData.length, // Number of items
             itemBuilder: (context, index) {
-              final images = [
-                'assets/amazon.png',
-                'assets/desert.png',
-                'assets/arctic.png',
-                'assets/wetlands.png',
-                'assets/savannah.png',
-                'assets/mangrove.png'
-              ];
-              final labels = [
-                ['The Jungle', 'Amazon'],
-                ['Desert', 'Egypt'],
-                ['Arctic', 'Greenland'],
-                ['Wetlands', 'Everglades'],
-                ['Savannah', 'Serengeti'],
-                ['Mangroves', 'Sundarbans']
-              ];
-
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Container(
-                    width: 324, // Fixed width for consistency
-                    height: 150, // Fixed height for consistency
-                    child: Stack(
-                      children: [
-                        Image.asset(
-                          images[index],
-                          width: double.infinity,
-                          height: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
-                        Positioned(
-                          bottom: 16,
-                          left: 16,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                labels[index][0],
-                                style: const TextStyle(
-                                  fontFamily: 'Minecraft',
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Text(
-                                labels[index][1],
-                                style: const TextStyle(
-                                  fontFamily: 'Minecraft',
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
+              final item = discoverData[index];
+              return GestureDetector(
+                onTap: () {
+                  if (item["route"] != null) {
+                    // Navigate to the respective page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => item["route"] as Widget,
+                      ),
+                    );
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
+                      width: 324, // Fixed width for consistency
+                      height: 150, // Fixed height for consistency
+                      child: Stack(
+                        children: [
+                          Image.asset(
+                            item["image"]!,
+                            width: double.infinity,
+                            height: double.infinity,
+                            fit: BoxFit.cover,
                           ),
-                        ),
-                      ],
+                          Positioned(
+                            bottom: 16,
+                            left: 16,
+                            child: Text(
+                              item["label"]!,
+                              style: const TextStyle(
+                                fontFamily: 'Minecraft',
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

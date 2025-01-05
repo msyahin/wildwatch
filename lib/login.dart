@@ -147,7 +147,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       ],
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.g_translate),
+                      icon: Image.asset('assets/google_logo.png'),
                       iconSize: 30,
                       onPressed: () {
                         // Handle Google login

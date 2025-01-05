@@ -1,10 +1,17 @@
+import 'dart:convert';
+import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'scan.dart'; // Import the ScanScreen file
+import 'scan.dart'; 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'saved_animals.dart';
 import 'discover.dart';
 import 'birds.dart';
-import 'see_all.dart'; // Import the See All page
+import 'mammals.dart';
+import 'reptiles.dart';
+import 'seafish.dart';
+import 'see_all.dart';
+import 'view_species.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -114,7 +121,7 @@ class HomeScreen extends StatelessWidget {
           const DiscoverSection(),
           const SizedBox(height: 16),
           const Expanded(
-            child: RecentAnimalsSection(),
+            child: QuickDiscoverSection(),
           ),
         ],
       ),
@@ -169,6 +176,20 @@ class WelcomeBanner extends StatelessWidget {
 class YourHistoryCard extends StatelessWidget {
   const YourHistoryCard({super.key});
 
+  Stream<int> _getSavedAnimalsCountStream() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return Stream.value(0); // Return a default value if the user is not logged in
+    }
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('saved_species')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length); // Map the snapshot to the count
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -181,10 +202,10 @@ class YourHistoryCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Column(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Your History',
                   style: TextStyle(
                     decoration: TextDecoration.underline,
@@ -193,14 +214,26 @@ class YourHistoryCard extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: 8),
-                Text(
-                  '3 new species discovered!',
-                  style: TextStyle(color: Colors.black),
+                const SizedBox(height: 8),
+                StreamBuilder<int>(
+                  stream: _getSavedAnimalsCountStream(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Text(
+                        'Loading saved species...',
+                        style: TextStyle(color: Colors.black),
+                      );
+                    }
+                    final count = snapshot.data!;
+                    return Text(
+                      '$count new species discovered!',
+                      style: const TextStyle(color: Colors.black),
+                    );
+                  },
                 ),
-                SizedBox(height: 8),
-                Text(
-                  '3 new different regions',
+                const SizedBox(height: 8),
+                const Text(
+                  'Explore new regions!',
                   style: TextStyle(color: Colors.black),
                 ),
               ],
@@ -238,7 +271,7 @@ class DiscoverSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text(
-              'Discover',
+              'Categories',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             GestureDetector(
@@ -281,20 +314,50 @@ class DiscoverSection extends StatelessWidget {
                   backgroundColor: Color(0xFFFF2257),
                 ),
               ),
-              const DiscoverCard(
-                label: 'Carnivore',
-                iconPath: 'assets/carnivore.png',
-                backgroundColor: Color(0xFFFFCF23),
+
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const mammalsScreen()),
+                  );
+                },
+                child: const DiscoverCard(
+                  label: 'Mammals',
+                  iconPath: 'assets/carnivore.png',
+                  backgroundColor: Color(0xFFFFCF23),
+                ),
               ),
-              const DiscoverCard(
-                label: 'Herbivore',
-                iconPath: 'assets/herbivore.png',
-                backgroundColor: Color(0xFFA3EE89),
+
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ReptilesScreen()),
+                  );
+                },
+                child: const DiscoverCard(
+                  label: 'Reptiles',
+                  iconPath: 'assets/herbivore.png',
+                  backgroundColor: Color(0xFFA3EE89),
+                ),
               ),
-              const DiscoverCard(
-                label: 'Sea Fish',
-                iconPath: 'assets/seafish.png',
-                backgroundColor: Color(0xFF1AACFF),
+
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const fishScreen()),
+                  );
+                },
+                child: const DiscoverCard(
+                  label: 'Fish',
+                  iconPath: 'assets/seafish.png',
+                  backgroundColor: Color(0xFF1AACFF),
+                ),
               ),
             ],
           ),
@@ -335,8 +398,48 @@ class DiscoverCard extends StatelessWidget {
   }
 }
 
-class RecentAnimalsSection extends StatelessWidget {
-  const RecentAnimalsSection({super.key});
+class QuickDiscoverSection extends StatefulWidget {
+  const QuickDiscoverSection({super.key});
+
+  @override
+  _QuickDiscoverSectionState createState() => _QuickDiscoverSectionState();
+}
+
+class _QuickDiscoverSectionState extends State<QuickDiscoverSection> {
+  List<Map<String, dynamic>> animalData = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadRandomAnimalData();
+  }
+
+  Future<void> loadRandomAnimalData() async {
+    try {
+      // Load the species_data.json file
+      final String response = await DefaultAssetBundle.of(context)
+          .loadString('assets/species_data.json');
+      List<dynamic> data = jsonDecode(response);
+
+      // Shuffle the list and pick a subset
+      data.shuffle(Random());
+      List<Map<String, dynamic>> randomAnimals = data
+          .take(6) // Change the number to decide how many animals to display
+          .cast<Map<String, dynamic>>()
+          .toList();
+
+      setState(() {
+        animalData = randomAnimals;
+        isLoading = false;
+      });
+    } catch (e) {
+      debugPrint('Error loading species data: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -344,66 +447,61 @@ class RecentAnimalsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Recent Animals',
+          'Quick Discover',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Expanded(
-          child: GridView.builder(
-            padding: EdgeInsets.zero,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 1,
-            ),
-            itemCount: animalImages.length,
-            itemBuilder: (context, index) {
-              return AnimalCard(imagePath: animalImages[index]);
-            },
-          ),
+          child: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : animalData.isEmpty
+                  ? const Center(
+                      child: Text(
+                        "No animals found!",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  : GridView.builder(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 100.0),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        childAspectRatio: 1,
+                      ),
+                      itemCount: animalData.length,
+                      itemBuilder: (context, index) {
+                        final animal = animalData[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ViewSpeciesPage(
+                                  speciesData: animal,
+                                ),
+                              ),
+                            );
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.asset(
+                              animal["headerImage"] ??
+                                  'assets/placeholder.jpg', // Fallback image
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
         ),
       ],
-    );
-  }
-}
-
-const List<String> animalImages = [
-  'assets/lion.jpg',
-  'assets/hornbill.jpg',
-  'assets/tiger.jpg',
-  'assets/panda.jpg',
-  'assets/elephant.jpg',
-  'assets/cheetah.jpg',
-];
-
-class AnimalCard extends StatelessWidget {
-  final String imagePath;
-
-  const AnimalCard({super.key, required this.imagePath});
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Image.asset(
-          imagePath,
-          fit: BoxFit.cover,
-          width: double.infinity,
-          height: double.infinity,
-        ),
-      ),
     );
   }
 }

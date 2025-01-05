@@ -1,29 +1,58 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'discover.dart';
-import 'home.dart'; // Import HomePage
-import 'scan.dart'; // Import ScanScreen
+import 'home.dart';
+import 'scan.dart';
+import 'view_species.dart';
 
-class BirdsScreen extends StatelessWidget {
+class BirdsScreen extends StatefulWidget {
   const BirdsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // List of bird images and their corresponding names
-    final List<Map<String, String>> birdData = [
-      {"image": "assets/redcrestedturaco.png", "name": "Red-crested Turaco"},
-      {"image": "assets/shoebill.png", "name": "Shoebill"},
-      {"image": "assets/whitestork.png", "name": "White Stork"},
-      {"image": "assets/casuarius.png", "name": "Casuarius"},
-      {"image": "assets/sunbittern.png", "name": "Sunbittern"},
-      {"image": "assets/kingpenguin.png", "name": "King Penguin"},
-      {"image": "assets/hamerkop.png", "name": "Hamerkop"},
-      {"image": "assets/indianpeafowl.png", "name": "Indian Peafowl"},
-      {"image": "assets/americanflamingo.png", "name": "American Flamingo"},
-      {"image": "assets/annashummingbird.png", "name": "Anna's Hummingbird"},
-      {"image": "assets/rainbowlorikeet.png", "name": "Rainbow Lorikeet"},
-      {"image": "assets/kingfisher.png", "name": "Kingfisher"},
-    ];
+  _BirdsScreenState createState() => _BirdsScreenState();
+}
 
+class _BirdsScreenState extends State<BirdsScreen> {
+  List<Map<String, dynamic>> birdData = [];
+  bool isLoading = true; // For displaying a loading indicator
+
+  @override
+  void initState() {
+    super.initState();
+    loadBirdData();
+  }
+
+  Future<void> loadBirdData() async {
+    try {
+      // Load the species_data.json file
+      final String response =
+          await DefaultAssetBundle.of(context).loadString('assets/species_data.json');
+      List<dynamic> data = jsonDecode(response);
+
+      // Filter only bird-related species
+      List<Map<String, dynamic>> birds = data
+          .where((species) =>
+              species["name"]?.toLowerCase() == "hornbill" ||
+              species["name"]?.toLowerCase() == "hummingbird" ||
+              species["name"]?.toLowerCase() == "albatross" ||
+              species["name"]?.toLowerCase() == "duck")
+          .cast<Map<String, dynamic>>() // Ensure the data is cast correctly
+          .toList();
+
+      setState(() {
+        birdData = birds;
+        isLoading = false;
+      });
+    } catch (e) {
+      debugPrint('Error loading species data: $e');
+      setState(() {
+        isLoading = false; // Stop loading even if there is an error
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -48,46 +77,71 @@ class BirdsScreen extends StatelessWidget {
         children: [
           Column(
             children: [
-              // Scrollable GridView for bird images
               Expanded(
-                child: GridView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Two columns
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 1, // Square cards
-                  ),
-                  itemCount: birdData.length, // Number of bird items
-                  itemBuilder: (context, index) {
-                    final bird = birdData[index];
-                    return Column(
-                      children: [
-                        Expanded(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Image.asset(
-                              bird["image"]!,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
+                child: isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : birdData.isEmpty
+                        ? const Center(
+                            child: Text(
+                              "No birds found!",
+                              style: TextStyle(
+                                fontFamily: 'Minecraft',
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
+                          )
+                        : GridView.builder(
+                            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 100.0),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2, // Two columns
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              childAspectRatio: 1, // Square cards
+                            ),
+                            itemCount: birdData.length,
+                            itemBuilder: (context, index) {
+                              final bird = birdData[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  // Navigate to ViewSpeciesPage with the bird's data
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ViewSpeciesPage(
+                                        speciesData: bird,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: Image.asset(
+                                          bird["headerImage"] ?? 'assets/placeholder.jpg',
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      bird["name"] ?? "Unknown Bird",
+                                      style: const TextStyle(
+                                        fontFamily: 'Minecraft',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          bird["name"]!,
-                          style: const TextStyle(
-                            fontFamily: 'Minecraft',
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    );
-                  },
-                ),
               ),
             ],
           ),

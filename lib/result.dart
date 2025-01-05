@@ -17,6 +17,9 @@ class ResultPage extends StatelessWidget {
   });
 
   Future<Map<String, dynamic>?> fetchSpeciesData(BuildContext context, String result) async {
+    if (result == "Unidentified") {
+      return null; // Skip fetching species data if the result is "Unidentified"
+    }
     final String response = await DefaultAssetBundle.of(context).loadString('assets/species_data.json');
     List<dynamic> data = jsonDecode(response);
 
@@ -70,78 +73,83 @@ class ResultPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
-                "You've caught a species!",
+              Text(
+                result == "Unidentified"
+                    ? "The image could not be identified."
+                    : "You've caught a species!",
                 style: TextStyle(
                   fontFamily: 'Minecraft',
                   fontSize: 18,
                   fontWeight: FontWeight.normal,
-                  color: Colors.purpleAccent,
+                  color: result == "Unidentified" ? Colors.red : Colors.purpleAccent,
                 ),
               ),
               const SizedBox(height: 12),
-              Text(
-                result,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontFamily: 'Minecraft',
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+              if (result != "Unidentified") ...[
+                Text(
+                  result,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontFamily: 'Minecraft',
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                "Probability: ${(probability * 100).toStringAsFixed(2)}%\nYou observed it on:\n$formattedDate",
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontFamily: 'Minecraft',
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.black54,
+                const SizedBox(height: 12),
+                Text(
+                  "Probability: ${(probability * 100).toStringAsFixed(2)}%\nYou observed it on:\n$formattedDate",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontFamily: 'Minecraft',
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black54,
+                  ),
                 ),
-              ),
+              ],
               const SizedBox(height: 24),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          final speciesData = await fetchSpeciesData(context, result);
-                          if (speciesData != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ViewSpeciesPage(speciesData: speciesData),
-                              ),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Species data not found!')),
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFCDEB45),
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                    if (result != "Unidentified")
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final speciesData = await fetchSpeciesData(context, result);
+                            if (speciesData != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ViewSpeciesPage(speciesData: speciesData),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Species data not found!')),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFCDEB45),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
-                        ),
-                        child: const Text(
-                          'View Species',
-                          style: TextStyle(
-                            fontFamily: 'Minecraft',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                          child: const Text(
+                            'View Species',
+                            style: TextStyle(
+                              fontFamily: 'Minecraft',
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                       ),
-                    ),
                     const SizedBox(height: 12),
                     SizedBox(
                       width: double.infinity,

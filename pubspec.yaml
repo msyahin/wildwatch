@@ -43,14 +43,10 @@ flutter:
     - assets/koala.jpg
     - assets/cheetah.jpg
     - assets/elephant.jpg
-    - assets/tiger.jpg
     - assets/panda.jpg
     - assets/homewild.png
     - assets/google_logo.png
     - assets/facebook_logo.png
-    - assets/cartoon1.jpeg
-    - assets/cartoon2.jpeg
-    - assets/cartoon3.jpeg
     - assets/getstart1.jpg
     - assets/wildlogo.png
     - assets/audio/theme_song.mp3
@@ -60,7 +56,6 @@ flutter:
     - assets/panda_1.png
     - assets/panda_2.png
     - assets/panda_3.png
-    - assets/hornbill.jpg
     - assets/flaminggo2.png
     - assets/desert.png
     - assets/southafrica.png
@@ -90,25 +85,110 @@ flutter:
     - assets/bees.png
     - assets/spiders.png
     - assets/crabs.png
-    - assets/tiger1.jpg
-    - assets/tiger2.jpg
-    - assets/tiger3.jpg
-    - assets/beetle1.jpg
-    - assets/beetle2.jpg
-    - assets/beetle3.jpg
-    - assets/beetle4.jpg
-    - assets/hornbill1.jpg
-    - assets/hornbill2.jpg
-    - assets/hornbill3.jpg
-    - assets/hornbill4.jpg
-    - assets/orangutan1.jpg
-    - assets/orangutan2.jpg
-    - assets/orangutan3.jpg
-    - assets/orangutan4.jpg
-    - assets/turtle1.jpg
-    - assets/turtle2.jpg
-    - assets/turtle3.jpg
-    - assets/turtle4.jpg
+    - assets/hornbill/hornbill.jpg
+    - assets/hornbill/hornbill1.jpg
+    - assets/hornbill/hornbill2.jpg
+    - assets/hornbill/hornbill3.jpg
+    - assets/hummingbird/hummingbird.jpg
+    - assets/hummingbird/hummingbird1.jpg
+    - assets/hummingbird/hummingbird2.jpg
+    - assets/hummingbird/hummingbird3.jpg
+    - assets/duck/duck.jpg
+    - assets/duck/duck1.jpg
+    - assets/duck/duck2.jpg
+    - assets/duck/duck3.jpg
+    - assets/albatross/albatross.jpg
+    - assets/albatross/albatross1.jpg
+    - assets/albatross/albatross2.jpg
+    - assets/albatross/albatross3.jpg
+    - assets/tiger/tiger.jpg
+    - assets/tiger/tiger1.jpg
+    - assets/tiger/tiger2.jpg
+    - assets/tiger/tiger3.jpg
+    - assets/cat/cat.jpg
+    - assets/cat/cat1.jpg
+    - assets/cat/cat2.jpg
+    - assets/cat/cat3.jpg
+    - assets/orangutan/orangutan.jpg
+    - assets/orangutan/orangutan1.jpg
+    - assets/orangutan/orangutan2.jpg
+    - assets/orangutan/orangutan3.jpg
+    - assets/dog/dog.jpg
+    - assets/dog/dog1.jpg
+    - assets/dog/dog2.jpg
+    - assets/dog/dog3.jpg
+    - assets/crocodile/crocodile.jpg
+    - assets/crocodile/crocodile1.jpg
+    - assets/crocodile/crocodile2.jpg
+    - assets/crocodile/crocodile3.jpg
+    - assets/lizard/lizard.jpg
+    - assets/lizard/lizard1.jpg
+    - assets/lizard/lizard2.jpg
+    - assets/lizard/lizard3.jpg
+    - assets/turtle/turtle.jpg
+    - assets/turtle/turtle1.jpg
+    - assets/turtle/turtle2.jpg
+    - assets/turtle/turtle3.jpg
+    - assets/snake/snake.jpg
+    - assets/snake/snake1.jpg
+    - assets/snake/snake2.jpg
+    - assets/snake/snake3.jpg
+    - assets/shark/shark.jpg
+    - assets/shark/shark1.jpg
+    - assets/shark/shark2.jpg
+    - assets/shark/shark3.jpg
+    - assets/whale/whale.jpg
+    - assets/whale/whale1.jpg
+    - assets/whale/whale2.jpg
+    - assets/whale/whale3.jpg
+    - assets/goldfish/goldfish.jpg
+    - assets/goldfish/goldfish1.jpg
+    - assets/goldfish/goldfish2.jpg
+    - assets/goldfish/goldfish3.jpg
+    - assets/anemone/anemone.jpg
+    - assets/anemone/anemone1.jpg
+    - assets/anemone/anemone2.jpg
+    - assets/anemone/anemone3.jpg
+    - assets/grasshopper/grasshopper.jpg
+    - assets/grasshopper/grasshopper1.jpg
+    - assets/grasshopper/grasshopper2.jpg
+    - assets/grasshopper/grasshopper3.jpg
+    - assets/cicada/cicada.jpg
+    - assets/cicada/cicada1.jpg
+    - assets/cicada/cicada2.jpg
+    - assets/cicada/cicada3.jpg
+    - assets/beetle/beetle.jpg
+    - assets/beetle/beetle1.jpg
+    - assets/beetle/beetle2.jpg
+    - assets/beetle/beetle3.jpg
+    - assets/ladybug/ladybug.jpg
+    - assets/ladybug/ladybug1.jpg
+    - assets/ladybug/ladybug2.jpg
+    - assets/ladybug/ladybug3.jpg
+    - assets/frog/frog.jpg
+    - assets/frog/frog1.jpg
+    - assets/frog/frog2.jpg
+    - assets/frog/frog3.jpg
+    - assets/salamander/salamander.jpg
+    - assets/salamander/salamander1.jpg
+    - assets/salamander/salamander2.jpg
+    - assets/salamander/salamander3.jpg
+    - assets/spider/spider.jpg
+    - assets/spider/spider1.jpg
+    - assets/spider/spider2.jpg
+    - assets/spider/spider3.jpg
+    - assets/scorpion/scorpion.jpg
+    - assets/scorpion/scorpion1.jpg
+    - assets/scorpion/scorpion2.jpg
+    - assets/scorpion/scorpion3.jpg
+    - assets/crab/crab.jpg
+    - assets/crab/crab1.jpg
+    - assets/crab/crab2.jpg
+    - assets/crab/crab3.jpg
+    - assets/lobster/lobster.jpg
+    - assets/lobster/lobster1.jpg
+    - assets/lobster/lobster2.jpg
+    - assets/lobster/lobster3.jpg
 
 
   fonts:

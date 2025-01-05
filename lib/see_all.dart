@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'amphibians.dart';
+import 'arachnids.dart';
+import 'crustaceans.dart';
+import 'insects.dart';
+import 'mammals.dart';
+import 'reptiles.dart';
+import 'seafish.dart';
 import 'birds.dart'; // Import the birds.dart interface
 import 'home.dart'; // Import the HomePage
 import 'scan.dart'; // Import the ScanScreen
@@ -12,13 +19,13 @@ class SeeAllScreen extends StatelessWidget {
     // Categories data
     final categories = [
       {"label": "Birds", "icon": "assets/flams1.png", "color": Colors.redAccent, "route": const BirdsScreen()},
-      {"label": "Mammals", "icon": "assets/lions1.png", "color": Colors.amber, "route": null},
-      {"label": "Reptiles", "icon": "assets/crocs1.png", "color": Colors.green, "route": null},
-      {"label": "Fish", "icon": "assets/shark2.png", "color": Colors.blueAccent, "route": null},
-      {"label": "Amphibians", "icon": "assets/frogs.png", "color": Colors.purpleAccent, "route": null},
-      {"label": "Insects", "icon": "assets/bees.png", "color": Colors.pinkAccent, "route": null},
-      {"label": "Arachnids", "icon": "assets/spiders.png", "color": Colors.lightBlueAccent, "route": null},
-      {"label": "Crustaceans", "icon": "assets/crabs.png", "color": Colors.orangeAccent, "route": null},
+      {"label": "Mammals", "icon": "assets/lions1.png", "color": Colors.amber, "route": const mammalsScreen()},
+      {"label": "Reptiles", "icon": "assets/crocs1.png", "color": Colors.green, "route": const ReptilesScreen()},
+      {"label": "Fish", "icon": "assets/shark2.png", "color": Colors.blueAccent, "route": const fishScreen()},
+      {"label": "Amphibians", "icon": "assets/frogs.png", "color": Colors.purpleAccent, "route": const amphibiansScreen()},
+      {"label": "Insects", "icon": "assets/bees.png", "color": Colors.pinkAccent, "route": const insectsScreen()},
+      {"label": "Arachnids", "icon": "assets/spiders.png", "color": Colors.lightBlueAccent, "route": const arachnidsScreen()},
+      {"label": "Crustaceans", "icon": "assets/crabs.png", "color": Colors.orangeAccent, "route": const crustaceansScreen()},
     ];
 
     return Scaffold(
@@ -44,7 +51,7 @@ class SeeAllScreen extends StatelessWidget {
       body: Stack(
         children: [
           GridView.builder(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 100.0), // Add padding at the bottom
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2, // Two categories per row
               crossAxisSpacing: 16,

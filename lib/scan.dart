@@ -454,17 +454,7 @@ Widget build(BuildContext context) {
             ),
           ],
         ),
-        const SizedBox(height: 20),
-        const Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            'Your Recent Images',
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-          ),
-        ),
+        
         const SizedBox(height: 12),
         Expanded(
           child: GridView.builder(
@@ -495,7 +485,7 @@ Widget build(BuildContext context) {
 
   Future<void> loadModel() async {
     try {
-      _interpreter = await tfl.Interpreter.fromAsset('assets/model.tflite');
+      _interpreter = await tfl.Interpreter.fromAsset('assets/model_unquant.tflite');
     } catch (e) {
       debugPrint('Error loading model: $e');
     }
@@ -523,40 +513,62 @@ Widget build(BuildContext context) {
   }
 
   Future<Uint8List> preprocessImage(File imageFile) async {
-    img.Image? originalImage = img.decodeImage(await imageFile.readAsBytes());
-    img.Image resizedImage =
-        img.copyResize(originalImage!, width: 224, height: 224);
-    Uint8List bytes = resizedImage.getBytes();
-    return bytes;
-  }
+  img.Image? originalImage = img.decodeImage(await imageFile.readAsBytes());
+  img.Image resizedImage = img.copyResize(originalImage!, width: 224, height: 224);
+
+  // Convert pixels to Float32 and normalize
+  List<double> normalizedPixels = resizedImage
+      .getBytes()
+      .map((pixel) => pixel / 255.0) // Normalize to 0.0 - 1.0
+      .toList();
+
+  return Float32List.fromList(normalizedPixels).buffer.asUint8List();
+}
 
   Future<void> runInference() async {
-    if (_labels == null) {
-      return;
-    }
-    try {
-      Uint8List inputBytes = await preprocessImage(_image);
-      var input = inputBytes.buffer.asUint8List().reshape([1, 224, 224, 3]);
-      var outputBuffer = List<int>.filled(1 * 6, 0).reshape([1, 6]);
-      _interpreter.run(input, outputBuffer);
-      List<int> output = outputBuffer[0];
-      debugPrint('Raw output: $output');
-      int maxScore = output.reduce(max);
-      _probability = (maxScore / 255.0);
-      int highestProbIndex = output.indexOf(maxScore);
+  if (_labels == null) {
+    return;
+  }
+  try {
+    Uint8List inputBytes = await preprocessImage(_image);
+    var input = inputBytes.buffer.asFloat32List().reshape([1, 224, 224, 3]);
+
+    // Adjust output buffer for float32
+    var outputBuffer = List<double>.filled(26, 0).reshape([1, 26]);
+
+    _interpreter.run(input, outputBuffer);
+    List<double> output = outputBuffer[0];
+    debugPrint('Raw output: $output');
+
+    // Find the highest score
+    double maxScore = output.reduce(max);
+    int highestProbIndex = output.indexOf(maxScore);
+
+    // Set a confidence threshold
+    const double confidenceThreshold = 0.6; // Adjust this based on your model's accuracy
+    if (maxScore < confidenceThreshold) {
+      setState(() {
+        _result = "Unidentified";
+        _probability = maxScore;
+      });
+    } else {
       String classificationResult = _labels![highestProbIndex];
       setState(() {
         _result = classificationResult;
+        _probability = maxScore;
       });
-      navigateToResult();
-    } catch (e) {
-      debugPrint('Error during inference: $e');
     }
+
+    navigateToResult();
+  } catch (e) {
+    debugPrint('Error during inference: $e');
   }
+}
+
 
   Future<List<String>> loadLabels() async {
     final labelsData =
-        await DefaultAssetBundle.of(context).loadString('assets/labels.txt');
+        await DefaultAssetBundle.of(context).loadString('assets/labels2.txt');
     return labelsData.split('\n');
   }
 

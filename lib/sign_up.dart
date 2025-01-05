@@ -187,7 +187,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ],
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.g_translate),
+                      icon: Image.asset('assets/google_logo.png'),
                       iconSize: 30,
                       onPressed: () {
                         // Handle Google Sign Up

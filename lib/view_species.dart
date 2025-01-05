@@ -89,6 +89,15 @@ class _ViewSpeciesPageState extends State<ViewSpeciesPage> {
     }
   }
 
+  void _showFullScreenGallery(BuildContext context, List<String> images, int initialIndex) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FullScreenGallery(images: images, initialIndex: initialIndex),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     String name = widget.speciesData['name'];
@@ -242,14 +251,19 @@ class _ViewSpeciesPageState extends State<ViewSpeciesPage> {
                   Wrap(
                     spacing: 10,
                     runSpacing: 10,
-                    children: images.map((imgPath) {
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset(
-                          imgPath,
-                          width: 110,
-                          height: 110,
-                          fit: BoxFit.cover,
+                    children: images.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      String imgPath = entry.value;
+                      return GestureDetector(
+                        onTap: () => _showFullScreenGallery(context, images, index),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            imgPath,
+                            width: 110,
+                            height: 110,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       );
                     }).toList(),
@@ -281,6 +295,88 @@ class _ViewSpeciesPageState extends State<ViewSpeciesPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class FullScreenGallery extends StatefulWidget {
+  final List<String> images;
+  final int initialIndex;
+
+  const FullScreenGallery({
+    super.key,
+    required this.images,
+    required this.initialIndex,
+  });
+
+  @override
+  _FullScreenGalleryState createState() => _FullScreenGalleryState();
+}
+
+class _FullScreenGalleryState extends State<FullScreenGallery> {
+  late int currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    currentIndex = widget.initialIndex;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          PageView.builder(
+            controller: PageController(initialPage: widget.initialIndex),
+            itemCount: widget.images.length,
+            onPageChanged: (index) {
+              setState(() {
+                currentIndex = index;
+              });
+            },
+            itemBuilder: (context, index) {
+              return Center(
+                child: Image.asset(
+                  widget.images[index],
+                  fit: BoxFit.contain,
+                ),
+              );
+            },
+          ),
+          Positioned(
+            top: 40,
+            left: 16,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          Positioned(
+            bottom: 40,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                for (int i = 0; i < widget.images.length; i++)
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: i == currentIndex ? Colors.white : Colors.grey,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
