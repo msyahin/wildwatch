@@ -12,4 +12,4 @@ WildWatch encourages citizen participation in wildlife conservation by making an
 
 Below is the snapshots result of the app:
 
-Screenshot.zip
+
