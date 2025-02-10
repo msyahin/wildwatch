@@ -8,8 +8,10 @@ Comprehensive Species Information – View details on conservation status, habit
 Discover Module – Explore animals based on different ecosystems.
 Save Identified Species – Store and revisit previously identified species.
 User-Friendly Interface – Gamified, retro-themed design with an intuitive layout.
+
 WildWatch encourages citizen participation in wildlife conservation by making animal identification accessible to both enthusiasts and researchers. The app fosters awareness and education while supporting biodiversity tracking initiatives.
 
 Below is the snapshots result of the app:
 
+[Screenshot.zip](https://github.com/user-attachments/files/18727723/Screenshot.zip)
 
